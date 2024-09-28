@@ -1,6 +1,6 @@
 # Evva Health Voice Agent
 
-Welcome to the Evva Health Voice Agent project! This interactive AI assistant communicates with users through voice, providing a seamless and engaging experience.
+Welcome to the Evva Health Voice Agent project! This interactive AI assistant communicates with users through voice, providing a seamless and engaging experience. For a video presentation of this project, please visit [this Google Drive link](https://drive.google.com/file/d/1d9YaP4ehPZ4XkClxTdea4-oD4wKPiWjD/view?usp=sharing).
 
 ## 🚀 Tech Stack
 
@@ -88,3 +88,5 @@ Welcome to the Evva Health Voice Agent project! This interactive AI assistant co
 Make sure to properly configure all `.env` files with the necessary environment variables before running the project components.
 
 Thank you
+
+
