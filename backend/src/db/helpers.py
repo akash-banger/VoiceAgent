@@ -22,7 +22,7 @@ def get_user_by_id(id: UUID) -> User:
         user = session.query(User).filter(User.id == id).first()
         return user
     except SQLAlchemyError as e:
-        raise e
+        print(e)
     finally:
         session.close()
     
@@ -58,13 +58,17 @@ def create_or_update_answer(user_id: UUID, question_id: UUID, answer_content: st
             existing_answer.answer_content = answer_content
             session.commit()
             session.refresh(existing_answer)
-            return existing_answer
+
         else:
             new_answer = Answer(user_id=user_id, question_id=question_id, answer_content=answer_content)
             session.add(new_answer)
-            session.refresh(new_answer)
             session.commit()
-            return new_answer
+            session.refresh(new_answer)
+
+        all_questions = session.query(Question).all()
+        answered_questions = session.query(Question).join(Answer, Question.id == Answer.question_id).filter(Answer.user_id == user_id).all()
+        unanswered_questions = [q for q in all_questions if q not in answered_questions]
+        return unanswered_questions
     except SQLAlchemyError as e:
         session.rollback()
         raise e
@@ -72,11 +76,13 @@ def create_or_update_answer(user_id: UUID, question_id: UUID, answer_content: st
         session.close()
 
 
-def get_answered_questions_by_user(user_id: UUID) -> list[Question]:
+def get_unanswered_questions_by_user(user_id: UUID) -> list[Question]:
     session = get_session()
     try:
+        all_questions = session.query(Question).all()
         answered_questions = session.query(Question).join(Answer, Question.id == Answer.question_id).filter(Answer.user_id == user_id).all()
-        return answered_questions
+        unanswered_questions = [q for q in all_questions if q not in answered_questions]
+        return unanswered_questions
     except SQLAlchemyError as e:
         raise e
     finally:

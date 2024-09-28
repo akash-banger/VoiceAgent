@@ -23,7 +23,7 @@ class Question(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     content = Column(String, nullable=False)
     date_created = Column(DateTime, default=datetime.now)
-    date_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 class Answer(Base):
     __tablename__ = 'answers'

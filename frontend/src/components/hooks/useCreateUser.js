@@ -30,7 +30,7 @@ const useCreateUser = () => {
           timer: 2000,
           showConfirmButton: false,
         });
-        navigate('/agent');
+        navigate('/agent/' + response.data.user_id);
         return response.data;
       } else {
         throw new Error("Unexpected response status");

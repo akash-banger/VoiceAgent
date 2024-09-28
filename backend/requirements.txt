@@ -1,3 +1,5 @@
 fastapi
 python-socketio[asyncio]
 sqlalchemy
+google-generativeai
+deepgram-sdk

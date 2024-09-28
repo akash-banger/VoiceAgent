@@ -25,7 +25,7 @@ const Home = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
       <h1 className="text-4xl font-bold mb-6">Welcome to VoiceAgent</h1>
       <p className="text-xl mb-8 text-center max-w-2xl">
-        VoiceAgent is an interactive AI assistant that communicates with you through voice. 
+        Evva Health VoiceAgent is an interactive AI assistant that communicates with you through voice. 
         It will ask you questions both visually and audibly, and you can respond using your voice.
       </p>
       <div className="mb-6 w-full max-w-md">
