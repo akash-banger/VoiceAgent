@@ -1,58 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRightCircle } from 'lucide-react';
-import useCreateUser from '../hooks/useCreateUser';
 import Swal from 'sweetalert2';
-
+import useCreateUser from '../hooks/useCreateUser';
+import { useNavigate } from 'react-router-dom';
 const Home = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
 
   const { loading, error, createUser } = useCreateUser();
 
-  const handleStart = () => {
-    if (name) {
-      createUser(name);
-    }else{
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Please enter your name to continue'
-        });
+  const handleLogin = () => {
+    if (name && password) {
+      createUser(name, password);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please enter both username and password to continue'
+      });
     }
   };
 
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      navigate('/chat/' + userId);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-4xl font-bold mb-6">Welcome to VoiceAgent</h1>
-      <p className="text-xl mb-8 text-center max-w-2xl">
-        Evva Health VoiceAgent is an interactive AI assistant that communicates with you through voice. 
-        It will ask you questions both visually and audibly, and you can respond using your voice.
-      </p>
-      <div className="mb-6 w-full max-w-md">
-        <label htmlFor="name" className="block text-sm font-medium mb-2">
-          To get started, please enter your name:
-        </label>
-        <div className="flex items-center">
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="flex-grow px-4 py-2 rounded-l-md bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Your name"
-          />
+      <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium mb-2">
+              Username
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter username"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter password"
+            />
+          </div>
           <button
-            onClick={handleStart}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onClick={handleLogin}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <ArrowRightCircle size={24} />
+            Create Account or Login
           </button>
         </div>
       </div>
-      <p className="text-sm text-gray-400 mt-4 text-center max-w-2xl">
-        Once you enter your name and click the arrow, the voice interaction will begin. 
-        Make sure your microphone is enabled and your speakers are on.
-      </p>
     </div>
   );
 };

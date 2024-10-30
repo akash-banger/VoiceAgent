@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { API_URL } from "../constants";
+import { API_URL } from "../../constants";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -10,52 +10,53 @@ const useCreateUser = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const createUser = async (name) => {
+  const createUser = async (name, password) => {
     setLoading(true);
     setError(null);
 
     try {
       const response = await axios.post(`${API_URL}/api/users`, {
         username: name,
+        password: password
       });
-      setLoading(false);
 
-      if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: response.data.message + ", logging in..",
-          position: "top-end",
-          toast: true,
-          timer: 2000,
-          showConfirmButton: false,
-        });
-        navigate('/agent/' + response.data.user_id);
-        return response.data;
-      } else {
-        throw new Error("Unexpected response status");
-      }
+      // Success case
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: response.data.message + ", logging in..",
+        position: "top-end",
+        toast: true,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      // localStorage.setItem('userId', response.data.user_id);
+      
+      navigate('/chat/' + response.data.user_id);
+      return response.data;
+
     } catch (err) {
-      setLoading(false);
-
-      if (err.response) {
-        setError("Server error. Please try again later.");
-      } else if (err.request) {
-        setError(
-          "No response from server. Please check your internet connection."
-        );
-      } else {
-
-        setError("An error occurred while creating the user");
-      }
-
+      // Determine the error message based on the error type
+      const errorMessage = err.response?.data?.detail || 
+                          err.response?.data?.message ||
+                          (err.request ? "Network error. Please check your connection." : "An error occurred while creating the user");
+      
+      setError(errorMessage);
+      
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error || "An error occurred while creating the user",
+        text: errorMessage,
+        position: "top-end",
+        toast: true,
+        timer: 3000,
       });
 
       return null;
+
+    } finally {
+      setLoading(false);
     }
   };
 
